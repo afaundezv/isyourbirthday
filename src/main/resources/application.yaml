@@ -1,0 +1,5 @@
+randomPoem:
+  protocol: "https://"
+  host: "www.poemist.com"
+  uri: "/api/v1/randompoems"
+
