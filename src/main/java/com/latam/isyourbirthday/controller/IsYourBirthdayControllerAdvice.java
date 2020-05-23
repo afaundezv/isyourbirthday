@@ -19,7 +19,7 @@ public class IsYourBirthdayControllerAdvice  extends ResponseEntityExceptionHand
 
     @ExceptionHandler(ParseException.class)
     protected ResponseEntity<ApiError> parseExceptionDate(ParseException ex) {
-        return new ResponseEntity<ApiError>(new ApiError(BAD_REQUEST.value(), "El formato de Fecha es dd-MM-yyyy",ex.getMessage()),BAD_REQUEST);
+        return new ResponseEntity<ApiError>(new ApiError(BAD_REQUEST.value(), "El formato de Fecha debe ser dd-MM-yyyy",ex.getMessage()),BAD_REQUEST);
     }
 
 

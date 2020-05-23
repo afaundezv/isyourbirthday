@@ -15,12 +15,12 @@ import java.text.ParseException;
 public class IsYourBirthdayControllerAdviceTest {
 
     @Test
-    public void testShouldThrowPersonalizeError() throws ParseException {
+    public void testShouldThrowCustomerError() throws ParseException {
         IsYourBirthdayControllerAdvice advice = new IsYourBirthdayControllerAdvice();
 
         ResponseEntity<ApiError> response = advice.parseExceptionDate(new ParseException("error forzado", 1));
 
-        Assert.assertEquals("El formato de Fecha es dd-MM-yyyy", response.getBody().getMessage());
+        Assert.assertEquals("El formato de Fecha debe ser dd-MM-yyyy", response.getBody().getMessage());
 
     }
 }
