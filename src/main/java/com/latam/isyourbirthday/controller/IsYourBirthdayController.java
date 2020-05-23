@@ -6,10 +6,7 @@ import com.latam.isyourbirthday.model.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -24,6 +21,7 @@ public class IsYourBirthdayController {
         isYourBirthdayBusiness = birthdayBusiness;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping(value ="v0/birthday")
     public ResponseEntity<ResponseData> isYourBirthday(@RequestParam String name, @RequestParam String lastName,
                                                        @RequestParam String motherLastName, @RequestParam String birthday) throws ParseException {
