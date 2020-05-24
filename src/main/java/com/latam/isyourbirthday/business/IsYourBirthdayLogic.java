@@ -28,7 +28,6 @@ public class IsYourBirthdayLogic {
         if (nextBDay.isBefore(today) || nextBDay.isEqual(today)) {
             nextBDay = nextBDay.plusYears(1);
         }
-        Period p = Period.between(today, nextBDay);
         long totalDias = ChronoUnit.DAYS.between(today, nextBDay);
         if (totalDias == 365) {
             pendingDaysToBirthday = 0;
@@ -46,7 +45,7 @@ public class IsYourBirthdayLogic {
     }
 
     public boolean isYourBirthdayToday(long daysToBirthday){
-        return daysToBirthday == 0 ? true : false;
+        return daysToBirthday == 0;
     }
 
     public Date parseDate(String birthday, String pattern) throws ParseException {
@@ -56,8 +55,7 @@ public class IsYourBirthdayLogic {
     private LocalDate transformDateToLocalDate(String birthdayDate) throws ParseException {
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Instant instant = parseDate(birthdayDate, "dd-MM-yyyy").toInstant();
-        LocalDate localBirthday = instant.atZone(defaultZoneId).toLocalDate();
-        return localBirthday;
+        return instant.atZone(defaultZoneId).toLocalDate();
     }
 
 
