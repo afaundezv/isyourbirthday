@@ -6,12 +6,13 @@ import com.latam.isyourbirthday.service.CallRandomPoem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
+import java.time.DateTimeException;
 
 @Component
 public class IsYourBirthdayBusiness implements IBirthdayBusiness {
 
     private RequestData requestData;
+    private ResponseData responseData;
     private IsYourBirthdayLogic birthdayLogic;
     private CallRandomPoem callRandomPoem;
     @Autowired
@@ -21,22 +22,26 @@ public class IsYourBirthdayBusiness implements IBirthdayBusiness {
     }
 
     @Override
-    public ResponseData execute(String name, String lastName, String motherLastName, String birthday) throws ParseException {
-        this.requestData = new RequestData(name, lastName, motherLastName, birthday);
-        return createResponseData();
+    public ResponseData execute(String name, String lastName, String motherLastName, String birthday) throws DateTimeException {
+        setRequestData(name, lastName, motherLastName, birthday);
+        setResponseData();
+        return  responseData;
     }
 
-    private ResponseData createResponseData() throws ParseException {
-        ResponseData responseData = new ResponseData();
+    private void setRequestData(String name, String lastName, String motherLastName, String birthday){
+        requestData = new RequestData(name, lastName, motherLastName, birthday);
+    }
+
+    private void setResponseData() throws DateTimeException {
+        responseData = new ResponseData();
         responseData.setAge(birthdayLogic.obtainsAge(requestData.getBirthday()));
-        responseData.setBirthday(birthdayLogic.parseDate(requestData.getBirthday(), "dd-MM-yyyy"));
+        responseData.setBirthday(birthdayLogic.transformStringDateToLocalDate(requestData.getBirthday()));
         responseData.setAge(birthdayLogic.obtainsAge(requestData.getBirthday()));
         responseData.setNameAndLastName(birthdayLogic.obtainsNameAndLastName(requestData.getNames(),requestData.getLastName()));
         responseData.setDaysRemainingBirthday(birthdayLogic.getPendingDaysToBirthday(requestData.getBirthday()));
         if(birthdayLogic.isYourBirthdayToday(responseData.getDaysRemainingBirthday())){
             responseData.setPoem(callRandomPoem.getPoem().getContent());
         }
-        return responseData;
     }
 
 }

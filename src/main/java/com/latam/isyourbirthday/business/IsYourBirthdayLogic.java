@@ -2,14 +2,10 @@ package com.latam.isyourbirthday.business;
 
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @Component
 public class IsYourBirthdayLogic {
@@ -20,9 +16,9 @@ public class IsYourBirthdayLogic {
         return new StringBuilder().append(firstName[0]).append(" ").append(lastName).toString();
     }
 
-    public long getPendingDaysToBirthday(String birthdayDate) throws ParseException {
+    public long getPendingDaysToBirthday(String birthdayDate) throws DateTimeException {
         long pendingDaysToBirthday;
-        LocalDate localBirthday = transformDateToLocalDate(birthdayDate);
+        LocalDate localBirthday = transformStringDateToLocalDate(birthdayDate);
         LocalDate today = LocalDate.now();
         LocalDate nextBDay = localBirthday.withYear(today.getYear());
         if (nextBDay.isBefore(today) || nextBDay.isEqual(today)) {
@@ -37,26 +33,21 @@ public class IsYourBirthdayLogic {
         return pendingDaysToBirthday;
     }
 
-    public int obtainsAge(String birthdayDate) throws ParseException {
-        LocalDate today = LocalDate.now();
-        LocalDate localBirthday = transformDateToLocalDate(birthdayDate);
-        Period age = Period.between(localBirthday, today);
-        return age.getYears();
+    public int obtainsAge(String birthdayDate) throws DateTimeException {
+    return Period.between(
+                transformStringDateToLocalDate(birthdayDate), LocalDate.now()
+        ).getYears();
     }
 
     public boolean isYourBirthdayToday(long daysToBirthday){
         return daysToBirthday == 0;
     }
 
-    public Date parseDate(String birthday, String pattern) throws ParseException {
-        return new SimpleDateFormat(pattern).parse(birthday);
+    public LocalDate transformStringDateToLocalDate(String birthdayDate) throws DateTimeException, IndexOutOfBoundsException {
+        String[] date = birthdayDate.split("-");
+        return LocalDate.of(Integer.parseInt(date[2]),
+                Integer.parseInt(date[1]),
+                Integer.parseInt(date[0]));
     }
-
-    private LocalDate transformDateToLocalDate(String birthdayDate) throws ParseException {
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Instant instant = parseDate(birthdayDate, "dd-MM-yyyy").toInstant();
-        return instant.atZone(defaultZoneId).toLocalDate();
-    }
-
 
 }

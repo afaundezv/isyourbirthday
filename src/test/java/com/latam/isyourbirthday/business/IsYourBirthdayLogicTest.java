@@ -9,6 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,12 +54,13 @@ public class IsYourBirthdayLogicTest {
     }
 
     @Test
-    public void testShouldGetAge() throws ParseException {
-        String  birthday = "24-08-1984";
+    public void testShouldGetAge() {
+        Date date = new Date();
+        String birthday = new SimpleDateFormat("dd-MM-yyyy").format(date);
 
         int age = isYourBirthdayLogic.obtainsAge(birthday);
 
-        Assert.assertEquals(35, age);
+        Assert.assertEquals(0, age);
     }
 
     @Test
@@ -70,32 +74,39 @@ public class IsYourBirthdayLogicTest {
 
     @Test
     public void testShouldValidMyBirthdayIsNotToday() {
-        int age = 35;
+        int daysToBirthday = 1;
 
-        boolean isMyBirthday = isYourBirthdayLogic.isYourBirthdayToday(age);
+        boolean isMyBirthday = isYourBirthdayLogic.isYourBirthdayToday(daysToBirthday);
 
         Assert.assertFalse(isMyBirthday);
     }
 
     @Test
-    public void testShouldParseDate() throws ParseException {
-        Date expectedDate = new SimpleDateFormat("dd/MM/yy").parse("24/08/84");
+    public void testShouldObtainsLocalDate() {
+        LocalDate expectedDate = LocalDate.of(1984, Month.AUGUST, 24);
         String birthday = "24-08-1984";
 
-        Date parseDate = isYourBirthdayLogic.parseDate(birthday, "dd-MM-yyyy");
+        LocalDate parseDate = isYourBirthdayLogic.transformStringDateToLocalDate(birthday);
 
         Assert.assertEquals(expectedDate, parseDate);
     }
 
     @Test
-    public void testShouldParseError() {
+    public void testShouldArrayIndexOutOfBoundsException() {
         String birthday = "24081984";
-        Assert.assertThrows(ParseException.class, ()->{
-            isYourBirthdayLogic.parseDate(birthday, "dd-MM-yyyy");
+        Assert.assertThrows(ArrayIndexOutOfBoundsException.class, ()->{
+            isYourBirthdayLogic.transformStringDateToLocalDate(birthday);
+        });
+    }
+
+    @Test
+    public void testShouldDateTimeException() {
+        String birthday = "1984-02-31";
+        Assert.assertThrows(DateTimeException.class, ()->{
+            isYourBirthdayLogic.transformStringDateToLocalDate(birthday);
         });
 
     }
-
 
 
 }
