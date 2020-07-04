@@ -1,4 +1,4 @@
-# Prueba Desarrollo para latam
+# Servicio  que devuelve si estas de cumpleaños y cuantos días  falta si no es tu cumpleaños
 
 servicio REST que recibe como parámetro de entrada:
  * Nombre completo (nombres y apellidos) 
